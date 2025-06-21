@@ -1,0 +1,7 @@
+Reading "/Users/sirine/Desktop/dev/compil/fr.ensisa.bencharnia.traductor/src/Scanner-calc.flex"
+Constructing NFA : 
+173 states in NFA
+Converting NFA to DFA : 
+...........................................................................
+77 states before minimization, 64 states in minimized DFA
+Writing code to "/Users/sirine/Desktop/dev/compil/fr.ensisa.bencharnia.traductor/src/fr/uha/montivincent/jcupnflex/sample/calculator/reader/Lexer.java"

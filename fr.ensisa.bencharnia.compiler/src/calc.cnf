@@ -1,0 +1,189 @@
+package fr.uha.montivincent.jcupnflex.sample.calculator.reader;
+
+parser import code {:
+import fr.uha.montivincent.jcupnflex.sample.calculator.TomlModel;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
+:}
+
+parser code {:
+
+    private static TomlModel model = new TomlModel();
+    
+    public void report_error(String message, Object info) {
+        StringBuffer m = new StringBuffer("Error");
+        m.append(info.toString());
+        m.append(" : "+message);
+        System.err.println(m.toString());
+    }
+   
+    public void report_fatal_error(String message, Object info) {
+        report_error(message, info);
+        System.exit(1);
+    }
+    
+    public void setValue(String name, int value) {
+        model.putValue(name, value);
+    }
+    
+    public int getValue(String name) {
+        Object val = model.getValue(name);
+        return val instanceof Integer ? (Integer)val : 0;
+    }
+
+:}
+
+scanner code {:
+    private Symbol fallback () {
+    	return symbol(ETerminal.OOA);
+		//throw new Error("Unrecognized character '"+yytext()+"' -- ignored");
+	}    
+:}
+
+terminal String     ID,TEXT,BOOL,EXPO;
+terminal			EOLN;
+terminal Double 	NUMBER;
+terminal			UNARIES;
+
+   
+nonterminal 		     program, block;
+nonterminal List<Map<String,Object>> list;
+nonterminal	Map<String,Object> instr;
+nonterminal List<String> key;
+nonterminal List<Object> array;
+nonterminal Object       value, key_expr;
+nonterminal Double		 num_expr;
+
+precedence right	UNARIES;
+
+start with program;
+
+program	::= block EOLN program		
+		| 	block 									{: System.out.println(model.toJson()); :}
+		;
+
+block	::=  '[' key:n ']' EOLN list:list 			{: 
+														model.enterContext(n,false); 
+										                for (Map<String,Object> item : list) {
+										                    model.putAll(item);
+										                }
+										                model.exitContext();
+										                //System.out.println(model.toJson());
+													:}
+		|    '[[' key:n ']]' EOLN list:list 		{: 
+														model.enterContext(n,true);
+										                for (Map<String,Object> item : list) {
+										                    model.putAll(item);
+										                }
+										                model.exitContext();
+										                //System.out.println(model.toJson());
+													:}
+		|    list:list 								{: 
+														if (model.isAtRoot()) {
+													        for (Map<String,Object> i : list) {
+													            model.putAll(i);
+													        }
+													    }
+									                    //System.out.println(model.toJson());
+													:}
+		;
+		
+// Listes d'instructions		
+list 	::=  (instr:i EOLN {: RESULT=i; :} )*:l 	{: RESULT=l; :}
+		;											//le resultat est une List<Map<List<String>,Object>> 
+
+//Les instructions (chaque ligne)
+instr	::=	 key:n '=' value:e		                {: 								
+														Map<String,Object> ret = new HashMap<>();
+										                model.putValue(n, e);
+										                Map<String, Object> current = ret;
+
+														for (int i = 0; i < n.size(); i++) {
+														    String key = n.get(i);
+														    if (i == n.size() - 1) {
+														        current.put(key, e);
+														    } else {
+														        Map<String, Object> newMap = new HashMap<>();
+														        current.put(key, newMap);
+														        current = newMap;
+														    }
+														}
+														
+														RESULT = ret;
+													:} //créé une HashMap avec List<String> (clé imbriquées) et valeur Object
+		;
+		
+num_expr ::= NUMBER
+		 |   NUMBER:n1 EXPO:e 						{: RESULT = Double.parseDouble(new java.math.BigDecimal(n1).toPlainString() + e); :}
+		 | 	 NUMBER:n1 '.' NUMBER:n2 				{: RESULT = Double.parseDouble(new java.math.BigDecimal(n1).toPlainString() + "." + new java.math.BigDecimal(n2).toPlainString());  :}
+		 | 	 NUMBER:n1 '.' NUMBER:n2 EXPO:e 		{: RESULT = Double.parseDouble(new java.math.BigDecimal(n1).toPlainString() + "." + new java.math.BigDecimal(n2).toPlainString() + e); :}
+		 ;
+		
+key_expr ::= NUMBER
+		 |	 TEXT
+		 |	 ID
+		 ;
+		
+key     ::= key_expr:first ( '.' key_expr:p 		{: 	RESULT = p.toString(); :} ) *:list
+													{:
+														list.add(0, first.toString());
+														List<String> resultList = new ArrayList<String>();
+														for (Object obj : list) resultList.add(obj.toString());
+														RESULT = resultList;
+													:} // crée la List<String> avec clés imbriquées
+		;
+
+		
+array   ::= '[' value:first ( ',' value:p 			{: 	RESULT = p; :} ) *:list ']'
+													{:
+														list.add(0, first);
+														RESULT = list;
+													:}// créer la List<Object> des objets de la array
+		;
+
+value	::=	TEXT:n					 				{: RESULT=n; :}
+		|   '-'	num_expr:e							{: RESULT = - e; :} %prec UNARIES
+		|	'+'? num_expr:e			   				{: RESULT = + e; :} %prec UNARIES
+		|	BOOL:e									{: if (e.equals("true")) RESULT=true; else RESULT=false; :}
+		|	'+'? 'inf'        						{: RESULT = new Double(Double.POSITIVE_INFINITY); :}
+		|	'-' 'inf'        						{: RESULT = new Double(Double.NEGATIVE_INFINITY); :}
+		|	array:n									{: RESULT=n; :}
+		;
+
+terminal void SUPPRESS, COMMENT;
+
+ID			::= `[A-Za-z_][A-Za-z0-9_-]*`
+			;
+	
+
+TEXT		::=	`\"([^\"\n\\]*(\\.[^\"\n\\]*)*)\"`  {: return symbol (ETerminal.TEXT, new String( zzBuffer, zzStartRead+1, zzMarkedPos-zzStartRead-2 )); :} //single line en echappant les "
+			|	`\"\"\"([\s\S]*?)\"\"\"`    		{: return symbol (ETerminal.TEXT, new String( zzBuffer, zzStartRead+4, zzMarkedPos-zzStartRead-7)); :} //les triples " multilignes
+			|	`'''([\s\S]*?)'''`    				{: return symbol (ETerminal.TEXT, new String( zzBuffer, zzStartRead+4, zzMarkedPos-zzStartRead-7)); :} //les triples ' multilignes
+			|	`'[^'\n]*'` 						{: return symbol (ETerminal.TEXT, new String( zzBuffer, zzStartRead+1, zzMarkedPos-zzStartRead-2 )); :}//les simple ' single line
+			;
+
+COMMENT		::=	 `[^\"]?#.*`
+			;
+			
+SUPPRESS	::=	`[ \t\f]`					
+			;
+			
+EXPO		::= `[eE][+-]?[0-9]+`					{: return symbol(ETerminal.EXPO, new String(zzBuffer,zzStartRead, zzMarkedPos-zzStartRead)); :} 
+			;
+
+NUMBER		::=	`[0-9]+("_"[0-9]+)*`				{: return symbol(ETerminal.NUMBER, new Double(Double.parseDouble(new String(zzBuffer, zzStartRead, zzMarkedPos-zzStartRead).replace("_", "")))); :} 
+			|	'nan'			 					{: return symbol(ETerminal.NUMBER, new Double(Double.NaN)); :}
+			|   `0x[a-fA-F0-9]+` 					{: double doubleValue = (double) Long.parseUnsignedLong(new String(zzBuffer, zzStartRead+2, zzMarkedPos-zzStartRead-2),16);return symbol (ETerminal.NUMBER, new Double(doubleValue)); :}
+			|	`0o[0-7]+` 		 					{: double doubleValue = (double) Long.parseLong(new String(zzBuffer, zzStartRead + 2, zzMarkedPos - zzStartRead - 2), 8);return symbol(ETerminal.NUMBER, new Double(doubleValue)); :}
+			|	`0b[01]+` 		 					{: double doubleValue = (double) Long.parseLong(new String(zzBuffer, zzStartRead + 2, zzMarkedPos - zzStartRead - 2), 2);return symbol(ETerminal.NUMBER, new Double(doubleValue)); :}
+			;
+			
+EOLN		::=	`\r\n|\r|\n`
+			;
+			
+BOOL		::= 'true' 	
+			|   'false' 
+			;

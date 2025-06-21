@@ -1,0 +1,145 @@
+package fr.uha.montivincent.jcupnflex.sample.calculator.reader;
+
+
+import fr.uha.montivincent.jcupnflex.sample.calculator.TomlModel;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
+
+
+
+parser code {:
+
+
+    private static TomlModel model = new TomlModel();
+    
+    public void report_error(String message, Object info) {
+        StringBuffer m = new StringBuffer("Error");
+        m.append(info.toString());
+        m.append(" : "+message);
+        System.err.println(m.toString());
+    }
+   
+    public void report_fatal_error(String message, Object info) {
+        report_error(message, info);
+        System.exit(1);
+    }
+    
+    public void setValue(String name, int value) {
+        model.putValue(name, value);
+    }
+    
+    public int getValue(String name) {
+        Object val = model.getValue(name);
+        return val instanceof Integer ? (Integer)val : 0;
+    }
+
+
+:}
+
+terminal  EOLN, UNARIES, __REGEXP_10__, __REGEXP_1__, __REGEXP_2__, __REGEXP_3__, __REGEXP_4__, __REGEXP_5__, __REGEXP_6__, __REGEXP_7__, __REGEXP_8__, __REGEXP_9__;
+terminal Double NUMBER;
+terminal String BOOL, EXPO, ID, TEXT;
+
+nonterminal  block, program;
+nonterminal Double num_expr;
+nonterminal List<Map<String,Object>> list;
+nonterminal List<Object> array;
+nonterminal List<String> key;
+nonterminal Map<String,Object> instr;
+nonterminal Object key_expr, value;
+
+precedence right UNARIES;
+
+
+start with program;
+
+array		::=	__REGEXP_1__ value:first ( __REGEXP_7__ value:p {:  	RESULT = p;  :}  ) *:list __REGEXP_2__ {: 
+														list.add(0, first);
+														RESULT = list;
+													 :} 
+			;
+
+block		::=	__REGEXP_1__ key:n __REGEXP_2__ EOLN list:list {:  
+														model.enterContext(n,false); 
+										                for (Map<String,Object> item : list) {
+										                    model.putAll(item);
+										                }
+										                model.exitContext();
+										                //System.out.println(model.toJson());
+													 :} 
+			|	__REGEXP_3__ key:n __REGEXP_4__ EOLN list:list {:  
+														model.enterContext(n,true);
+										                for (Map<String,Object> item : list) {
+										                    model.putAll(item);
+										                }
+										                model.exitContext();
+										                //System.out.println(model.toJson());
+													 :} 
+			|	list:list {:  
+														if (model.isAtRoot()) {
+													        for (Map<String,Object> i : list) {
+													            model.putAll(i);
+													        }
+													    }
+									                    //System.out.println(model.toJson());
+													 :} 
+			;
+
+instr		::=	key:n __REGEXP_5__ value:e {:  								
+														Map<String,Object> ret = new HashMap<>();
+										                model.putValue(n, e);
+										                Map<String, Object> current = ret;
+
+														for (int i = 0; i < n.size(); i++) {
+														    String key = n.get(i);
+														    if (i == n.size() - 1) {
+														        current.put(key, e);
+														    } else {
+														        Map<String, Object> newMap = new HashMap<>();
+														        current.put(key, newMap);
+														        current = newMap;
+														    }
+														}
+														
+														RESULT = ret;
+													 :} 
+			;
+
+key			::=	key_expr:first ( __REGEXP_6__ key_expr:p {:  	RESULT = p.toString();  :}  ) *:list {: 
+														list.add(0, first.toString());
+														List<String> resultList = new ArrayList<String>();
+														for (Object obj : list) resultList.add(obj.toString());
+														RESULT = resultList;
+													 :} 
+			;
+
+key_expr	::=	NUMBER 
+			|	TEXT 
+			|	ID 
+			;
+
+list		::=	( instr:i EOLN {:  RESULT=i;  :}  ) *:l {:  RESULT=l;  :} 
+			;
+
+num_expr	::=	NUMBER 
+			|	NUMBER:n1 EXPO:e {:  RESULT = Double.parseDouble(new java.math.BigDecimal(n1).toPlainString() + e);  :} 
+			|	NUMBER:n1 __REGEXP_6__ NUMBER:n2 {:  RESULT = Double.parseDouble(new java.math.BigDecimal(n1).toPlainString() + "." + new java.math.BigDecimal(n2).toPlainString());   :} 
+			|	NUMBER:n1 __REGEXP_6__ NUMBER:n2 EXPO:e {:  RESULT = Double.parseDouble(new java.math.BigDecimal(n1).toPlainString() + "." + new java.math.BigDecimal(n2).toPlainString() + e);  :} 
+			;
+
+program		::=	block EOLN program 
+			|	block {:  System.out.println(model.toJson());  :} 
+			;
+
+value		::=	TEXT:n {:  RESULT=n;  :} 
+			|	__REGEXP_8__ num_expr:e {:  RESULT = - e;  :}  %prec UNARIES
+			|	__REGEXP_9__ ? num_expr:e {:  RESULT = + e;  :}  %prec UNARIES
+			|	BOOL:e {:  if (e.equals("true")) RESULT=true; else RESULT=false;  :} 
+			|	__REGEXP_9__ ? __REGEXP_10__ {:  RESULT = new Double(Double.POSITIVE_INFINITY);  :} 
+			|	__REGEXP_8__ __REGEXP_10__ {:  RESULT = new Double(Double.NEGATIVE_INFINITY);  :} 
+			|	array:n {:  RESULT=n;  :} 
+			;
+

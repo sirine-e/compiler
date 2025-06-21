@@ -1,0 +1,777 @@
+===== Messages =====
+Info: Delete file : /Users/sirine/Desktop/dev/compil/fr.ensisa.bencharnia.traductor/src/fr/uha/montivincent/jcupnflex/sample/calculator/reader/ETerminal.java
+Info: Delete file : /Users/sirine/Desktop/dev/compil/fr.ensisa.bencharnia.traductor/src/fr/uha/montivincent/jcupnflex/sample/calculator/reader/ENonterminal.java
+Info: Delete file : /Users/sirine/Desktop/dev/compil/fr.ensisa.bencharnia.traductor/src/fr/uha/montivincent/jcupnflex/sample/calculator/reader/Parser.java
+Info: Delete file : /Users/sirine/Desktop/dev/compil/fr.ensisa.bencharnia.traductor/src/fr/uha/montivincent/jcupnflex/sample/calculator/reader/Parser.dump
+Info: Generate Terminal file : /Users/sirine/Desktop/dev/compil/fr.ensisa.bencharnia.traductor/src/fr/uha/montivincent/jcupnflex/sample/calculator/reader/ETerminal.java
+Info: Generate Nonterminal file : /Users/sirine/Desktop/dev/compil/fr.ensisa.bencharnia.traductor/src/fr/uha/montivincent/jcupnflex/sample/calculator/reader/ENonterminal.java
+Info: Generate Parser file : /Users/sirine/Desktop/dev/compil/fr.ensisa.bencharnia.traductor/src/fr/uha/montivincent/jcupnflex/sample/calculator/reader/Parser.java
+Info: Generate Dump file : /Users/sirine/Desktop/dev/compil/fr.ensisa.bencharnia.traductor/src/fr/uha/montivincent/jcupnflex/sample/calculator/reader/Parser.dump
+===== Terminals =====
+[0]error [1]EOF [2]OOA [3]EOLN 
+[4]UNARIES [5]__REGEXP_10__ [6]__REGEXP_1__ [7]__REGEXP_2__ 
+[8]__REGEXP_3__ [9]__REGEXP_4__ [10]__REGEXP_5__ [11]__REGEXP_6__ 
+[12]__REGEXP_7__ [13]__REGEXP_8__ [14]__REGEXP_9__ [15]NUMBER<Double> 
+[16]BOOL<String> [17]EXPO<String> [18]ID<String> [19]TEXT<String> 
+
+
+===== Non terminals =====
+[0]block [1]program [2]num_expr<Double> [3]list<List<Map<String,Object>>> 
+[4]array<List<Object>> [5]key<List<String>> [6]instr<Map<String,Object>> [7]key_expr<Object> 
+[8]value<Object> [0]$START<Object> [10]$parenthesis1<Object> [11]$parenthesis1$0_many<Object[]> 
+[12]$parenthesis2<Object> [13]$parenthesis2$0_many<Object[]> [14]$parenthesis3<Map<String,Object>> [15]$parenthesis3$0_many<Map<String,Object>[]> 
+[16]__REGEXP_9__$0_1 
+
+===== Productions =====
+[0] $START ::= program EOF 
+[1] $parenthesis1 ::= __REGEXP_7__ value 
+[2] array ::= __REGEXP_1__ value $parenthesis1$0_many __REGEXP_2__ 
+[3] block ::= __REGEXP_1__ key __REGEXP_2__ EOLN list 
+[4] block ::= __REGEXP_3__ key __REGEXP_4__ EOLN list 
+[5] block ::= list 
+[6] instr ::= key __REGEXP_5__ value 
+[7] $parenthesis2 ::= __REGEXP_6__ key_expr 
+[8] key ::= key_expr $parenthesis2$0_many 
+[9] key_expr ::= NUMBER 
+[10] key_expr ::= TEXT 
+[11] key_expr ::= ID 
+[12] $parenthesis3 ::= instr EOLN 
+[13] list ::= $parenthesis3$0_many 
+[14] num_expr ::= NUMBER 
+[15] num_expr ::= NUMBER EXPO 
+[16] num_expr ::= NUMBER __REGEXP_6__ NUMBER 
+[17] num_expr ::= NUMBER __REGEXP_6__ NUMBER EXPO 
+[18] program ::= block EOLN program 
+[19] program ::= block 
+[20] value ::= TEXT 
+[21] value ::= __REGEXP_8__ num_expr 
+[22] value ::= __REGEXP_9__$0_1 num_expr 
+[23] value ::= BOOL 
+[24] value ::= __REGEXP_9__$0_1 __REGEXP_10__ 
+[25] value ::= __REGEXP_8__ __REGEXP_10__ 
+[26] value ::= array 
+[27] __REGEXP_9__$0_1 ::= 
+[28] __REGEXP_9__$0_1 ::= __REGEXP_9__ 
+[29] $parenthesis1$0_many ::= 
+[30] $parenthesis1$0_many ::= $parenthesis1$0_many $parenthesis1 
+[31] $parenthesis2$0_many ::= 
+[32] $parenthesis2$0_many ::= $parenthesis2$0_many $parenthesis2 
+[33] $parenthesis3$0_many ::= 
+[34] $parenthesis3$0_many ::= $parenthesis3$0_many $parenthesis3 
+
+===== Viable Prefix Recognizer =====
+lalr_state [0]: {
+  [$START ::= (*) program EOF , {EOF[1]}]
+  [block ::= (*) __REGEXP_1__ key __REGEXP_2__ EOLN list , {EOF[1], EOLN[3]}]
+  [block ::= (*) __REGEXP_3__ key __REGEXP_4__ EOLN list , {EOF[1], EOLN[3]}]
+  [block ::= (*) list , {EOF[1], EOLN[3]}]
+  [list ::= (*) $parenthesis3$0_many , {EOF[1], EOLN[3]}]
+  [program ::= (*) block EOLN program , {EOF[1]}]
+  [program ::= (*) block , {EOF[1]}]
+  [$parenthesis3$0_many ::= (*) , {EOF[1], EOLN[3], NUMBER<Double>[15], ID<String>[18], TEXT<String>[19]}]
+  [$parenthesis3$0_many ::= (*) $parenthesis3$0_many $parenthesis3 , {EOF[1], EOLN[3], NUMBER<Double>[15], ID<String>[18], TEXT<String>[19]}]
+}
+transition on $parenthesis3$0_many to state [6]
+transition on list to state [5]
+transition on program to state [4]
+transition on block to state [3]
+transition on __REGEXP_3__ to state [2]
+transition on __REGEXP_1__ to state [1]
+
+-------------------
+lalr_state [1]: {
+  [block ::= __REGEXP_1__ (*) key __REGEXP_2__ EOLN list , {EOF[1], EOLN[3]}]
+  [key ::= (*) key_expr $parenthesis2$0_many , {__REGEXP_2__[7]}]
+  [key_expr ::= (*) NUMBER , {__REGEXP_2__[7], __REGEXP_6__[11]}]
+  [key_expr ::= (*) TEXT , {__REGEXP_2__[7], __REGEXP_6__[11]}]
+  [key_expr ::= (*) ID , {__REGEXP_2__[7], __REGEXP_6__[11]}]
+}
+transition on key_expr to state [7]
+transition on key to state [8]
+transition on TEXT to state [7]
+transition on ID to state [7]
+transition on NUMBER to state [7]
+
+-------------------
+lalr_state [2]: {
+  [block ::= __REGEXP_3__ (*) key __REGEXP_4__ EOLN list , {EOF[1], EOLN[3]}]
+  [key ::= (*) key_expr $parenthesis2$0_many , {__REGEXP_4__[9]}]
+  [key_expr ::= (*) NUMBER , {__REGEXP_4__[9], __REGEXP_6__[11]}]
+  [key_expr ::= (*) TEXT , {__REGEXP_4__[9], __REGEXP_6__[11]}]
+  [key_expr ::= (*) ID , {__REGEXP_4__[9], __REGEXP_6__[11]}]
+}
+transition on key_expr to state [7]
+transition on key to state [9]
+transition on TEXT to state [7]
+transition on ID to state [7]
+transition on NUMBER to state [7]
+
+-------------------
+lalr_state [3]: {
+  [program ::= block (*) EOLN program , {EOF[1]}]
+  [program ::= block (*) , {EOF[1]}]
+}
+transition on EOLN to state [10]
+
+-------------------
+lalr_state [4]: {
+  [$START ::= program (*) EOF , {EOF[1]}]
+}
+transition on EOF to state [11]
+
+-------------------
+lalr_state [5]: {
+  [block ::= list (*) , {EOF[1], EOLN[3]}]
+}
+
+-------------------
+lalr_state [6]: {
+  [list ::= $parenthesis3$0_many (*) , {EOF[1], EOLN[3]}]
+  [$parenthesis3$0_many ::= $parenthesis3$0_many (*) $parenthesis3 , {EOF[1], EOLN[3], NUMBER<Double>[15], ID<String>[18], TEXT<String>[19]}]
+  [instr ::= (*) key __REGEXP_5__ value , {EOLN[3]}]
+  [key ::= (*) key_expr $parenthesis2$0_many , {__REGEXP_5__[10]}]
+  [key_expr ::= (*) NUMBER , {__REGEXP_5__[10], __REGEXP_6__[11]}]
+  [key_expr ::= (*) TEXT , {__REGEXP_5__[10], __REGEXP_6__[11]}]
+  [key_expr ::= (*) ID , {__REGEXP_5__[10], __REGEXP_6__[11]}]
+  [$parenthesis3 ::= (*) instr EOLN , {EOF[1], EOLN[3], NUMBER<Double>[15], ID<String>[18], TEXT<String>[19]}]
+}
+transition on $parenthesis3 to state [14]
+transition on key_expr to state [7]
+transition on instr to state [13]
+transition on key to state [12]
+transition on TEXT to state [7]
+transition on ID to state [7]
+transition on NUMBER to state [7]
+
+-------------------
+lalr_state [7]: {
+  [key ::= key_expr (*) $parenthesis2$0_many , {__REGEXP_2__[7], __REGEXP_4__[9], __REGEXP_5__[10]}]
+  [$parenthesis2$0_many ::= (*) , {__REGEXP_2__[7], __REGEXP_4__[9], __REGEXP_5__[10], __REGEXP_6__[11]}]
+  [$parenthesis2$0_many ::= (*) $parenthesis2$0_many $parenthesis2 , {__REGEXP_2__[7], __REGEXP_4__[9], __REGEXP_5__[10], __REGEXP_6__[11]}]
+}
+transition on $parenthesis2$0_many to state [15]
+
+-------------------
+lalr_state [8]: {
+  [block ::= __REGEXP_1__ key (*) __REGEXP_2__ EOLN list , {EOF[1], EOLN[3]}]
+}
+transition on __REGEXP_2__ to state [16]
+
+-------------------
+lalr_state [9]: {
+  [block ::= __REGEXP_3__ key (*) __REGEXP_4__ EOLN list , {EOF[1], EOLN[3]}]
+}
+transition on __REGEXP_4__ to state [17]
+
+-------------------
+lalr_state [10]: {
+  [program ::= block EOLN (*) program , {EOF[1]}]
+  [block ::= (*) __REGEXP_1__ key __REGEXP_2__ EOLN list , {EOF[1], EOLN[3]}]
+  [block ::= (*) __REGEXP_3__ key __REGEXP_4__ EOLN list , {EOF[1], EOLN[3]}]
+  [block ::= (*) list , {EOF[1], EOLN[3]}]
+  [list ::= (*) $parenthesis3$0_many , {EOF[1], EOLN[3]}]
+  [program ::= (*) block EOLN program , {EOF[1]}]
+  [program ::= (*) block , {EOF[1]}]
+  [$parenthesis3$0_many ::= (*) , {EOF[1], EOLN[3], NUMBER<Double>[15], ID<String>[18], TEXT<String>[19]}]
+  [$parenthesis3$0_many ::= (*) $parenthesis3$0_many $parenthesis3 , {EOF[1], EOLN[3], NUMBER<Double>[15], ID<String>[18], TEXT<String>[19]}]
+}
+transition on $parenthesis3$0_many to state [6]
+transition on list to state [5]
+transition on program to state [18]
+transition on block to state [3]
+transition on __REGEXP_3__ to state [2]
+transition on __REGEXP_1__ to state [1]
+
+-------------------
+lalr_state [11]: {
+  [$START ::= program EOF (*) , {EOF[1]}]
+}
+
+-------------------
+lalr_state [12]: {
+  [instr ::= key (*) __REGEXP_5__ value , {EOLN[3]}]
+}
+transition on __REGEXP_5__ to state [19]
+
+-------------------
+lalr_state [13]: {
+  [$parenthesis3 ::= instr (*) EOLN , {EOF[1], EOLN[3], NUMBER<Double>[15], ID<String>[18], TEXT<String>[19]}]
+}
+transition on EOLN to state [20]
+
+-------------------
+lalr_state [14]: {
+  [$parenthesis3$0_many ::= $parenthesis3$0_many $parenthesis3 (*) , {EOF[1], EOLN[3], NUMBER<Double>[15], ID<String>[18], TEXT<String>[19]}]
+}
+
+-------------------
+lalr_state [15]: {
+  [key ::= key_expr $parenthesis2$0_many (*) , {__REGEXP_2__[7], __REGEXP_4__[9], __REGEXP_5__[10]}]
+  [$parenthesis2$0_many ::= $parenthesis2$0_many (*) $parenthesis2 , {__REGEXP_2__[7], __REGEXP_4__[9], __REGEXP_5__[10], __REGEXP_6__[11]}]
+  [$parenthesis2 ::= (*) __REGEXP_6__ key_expr , {__REGEXP_2__[7], __REGEXP_4__[9], __REGEXP_5__[10], __REGEXP_6__[11]}]
+}
+transition on $parenthesis2 to state [22]
+transition on __REGEXP_6__ to state [21]
+
+-------------------
+lalr_state [16]: {
+  [block ::= __REGEXP_1__ key __REGEXP_2__ (*) EOLN list , {EOF[1], EOLN[3]}]
+}
+transition on EOLN to state [23]
+
+-------------------
+lalr_state [17]: {
+  [block ::= __REGEXP_3__ key __REGEXP_4__ (*) EOLN list , {EOF[1], EOLN[3]}]
+}
+transition on EOLN to state [24]
+
+-------------------
+lalr_state [18]: {
+  [program ::= block EOLN program (*) , {EOF[1]}]
+}
+
+-------------------
+lalr_state [19]: {
+  [instr ::= key __REGEXP_5__ (*) value , {EOLN[3]}]
+  [array ::= (*) __REGEXP_1__ value $parenthesis1$0_many __REGEXP_2__ , {EOLN[3]}]
+  [value ::= (*) TEXT , {EOLN[3]}]
+  [value ::= (*) __REGEXP_8__ num_expr , {EOLN[3]}]
+  [value ::= (*) __REGEXP_9__$0_1 num_expr , {EOLN[3]}]
+  [value ::= (*) BOOL , {EOLN[3]}]
+  [value ::= (*) __REGEXP_9__$0_1 __REGEXP_10__ , {EOLN[3]}]
+  [value ::= (*) __REGEXP_8__ __REGEXP_10__ , {EOLN[3]}]
+  [value ::= (*) array , {EOLN[3]}]
+  [__REGEXP_9__$0_1 ::= (*) , {__REGEXP_10__[5], NUMBER<Double>[15]}]
+  [__REGEXP_9__$0_1 ::= (*) __REGEXP_9__ , {__REGEXP_10__[5], NUMBER<Double>[15]}]
+}
+transition on __REGEXP_9__$0_1 to state [27]
+transition on value to state [31]
+transition on array to state [30]
+transition on TEXT to state [29]
+transition on BOOL to state [28]
+transition on __REGEXP_9__ to state [27]
+transition on __REGEXP_8__ to state [26]
+transition on __REGEXP_1__ to state [25]
+
+-------------------
+lalr_state [20]: {
+  [$parenthesis3 ::= instr EOLN (*) , {EOF[1], EOLN[3], NUMBER<Double>[15], ID<String>[18], TEXT<String>[19]}]
+}
+
+-------------------
+lalr_state [21]: {
+  [$parenthesis2 ::= __REGEXP_6__ (*) key_expr , {__REGEXP_2__[7], __REGEXP_4__[9], __REGEXP_5__[10], __REGEXP_6__[11]}]
+  [key_expr ::= (*) NUMBER , {__REGEXP_2__[7], __REGEXP_4__[9], __REGEXP_5__[10], __REGEXP_6__[11]}]
+  [key_expr ::= (*) TEXT , {__REGEXP_2__[7], __REGEXP_4__[9], __REGEXP_5__[10], __REGEXP_6__[11]}]
+  [key_expr ::= (*) ID , {__REGEXP_2__[7], __REGEXP_4__[9], __REGEXP_5__[10], __REGEXP_6__[11]}]
+}
+transition on key_expr to state [32]
+transition on TEXT to state [32]
+transition on ID to state [32]
+transition on NUMBER to state [32]
+
+-------------------
+lalr_state [22]: {
+  [$parenthesis2$0_many ::= $parenthesis2$0_many $parenthesis2 (*) , {__REGEXP_2__[7], __REGEXP_4__[9], __REGEXP_5__[10], __REGEXP_6__[11]}]
+}
+
+-------------------
+lalr_state [23]: {
+  [block ::= __REGEXP_1__ key __REGEXP_2__ EOLN (*) list , {EOF[1], EOLN[3]}]
+  [list ::= (*) $parenthesis3$0_many , {EOF[1], EOLN[3]}]
+  [$parenthesis3$0_many ::= (*) , {EOF[1], EOLN[3], NUMBER<Double>[15], ID<String>[18], TEXT<String>[19]}]
+  [$parenthesis3$0_many ::= (*) $parenthesis3$0_many $parenthesis3 , {EOF[1], EOLN[3], NUMBER<Double>[15], ID<String>[18], TEXT<String>[19]}]
+}
+transition on $parenthesis3$0_many to state [6]
+transition on list to state [33]
+
+-------------------
+lalr_state [24]: {
+  [block ::= __REGEXP_3__ key __REGEXP_4__ EOLN (*) list , {EOF[1], EOLN[3]}]
+  [list ::= (*) $parenthesis3$0_many , {EOF[1], EOLN[3]}]
+  [$parenthesis3$0_many ::= (*) , {EOF[1], EOLN[3], NUMBER<Double>[15], ID<String>[18], TEXT<String>[19]}]
+  [$parenthesis3$0_many ::= (*) $parenthesis3$0_many $parenthesis3 , {EOF[1], EOLN[3], NUMBER<Double>[15], ID<String>[18], TEXT<String>[19]}]
+}
+transition on $parenthesis3$0_many to state [6]
+transition on list to state [34]
+
+-------------------
+lalr_state [25]: {
+  [array ::= __REGEXP_1__ (*) value $parenthesis1$0_many __REGEXP_2__ , {EOLN[3], __REGEXP_2__[7], __REGEXP_7__[12]}]
+  [array ::= (*) __REGEXP_1__ value $parenthesis1$0_many __REGEXP_2__ , {__REGEXP_2__[7], __REGEXP_7__[12]}]
+  [value ::= (*) TEXT , {__REGEXP_2__[7], __REGEXP_7__[12]}]
+  [value ::= (*) __REGEXP_8__ num_expr , {__REGEXP_2__[7], __REGEXP_7__[12]}]
+  [value ::= (*) __REGEXP_9__$0_1 num_expr , {__REGEXP_2__[7], __REGEXP_7__[12]}]
+  [value ::= (*) BOOL , {__REGEXP_2__[7], __REGEXP_7__[12]}]
+  [value ::= (*) __REGEXP_9__$0_1 __REGEXP_10__ , {__REGEXP_2__[7], __REGEXP_7__[12]}]
+  [value ::= (*) __REGEXP_8__ __REGEXP_10__ , {__REGEXP_2__[7], __REGEXP_7__[12]}]
+  [value ::= (*) array , {__REGEXP_2__[7], __REGEXP_7__[12]}]
+  [__REGEXP_9__$0_1 ::= (*) , {__REGEXP_10__[5], NUMBER<Double>[15]}]
+  [__REGEXP_9__$0_1 ::= (*) __REGEXP_9__ , {__REGEXP_10__[5], NUMBER<Double>[15]}]
+}
+transition on __REGEXP_9__$0_1 to state [27]
+transition on value to state [35]
+transition on array to state [30]
+transition on TEXT to state [29]
+transition on BOOL to state [28]
+transition on __REGEXP_9__ to state [27]
+transition on __REGEXP_8__ to state [26]
+transition on __REGEXP_1__ to state [25]
+
+-------------------
+lalr_state [26]: {
+  [value ::= __REGEXP_8__ (*) num_expr , {EOLN[3], __REGEXP_2__[7], __REGEXP_7__[12]}]
+  [value ::= __REGEXP_8__ (*) __REGEXP_10__ , {EOLN[3], __REGEXP_2__[7], __REGEXP_7__[12]}]
+  [num_expr ::= (*) NUMBER , {EOLN[3], __REGEXP_2__[7], __REGEXP_7__[12]}]
+  [num_expr ::= (*) NUMBER EXPO , {EOLN[3], __REGEXP_2__[7], __REGEXP_7__[12]}]
+  [num_expr ::= (*) NUMBER __REGEXP_6__ NUMBER , {EOLN[3], __REGEXP_2__[7], __REGEXP_7__[12]}]
+  [num_expr ::= (*) NUMBER __REGEXP_6__ NUMBER EXPO , {EOLN[3], __REGEXP_2__[7], __REGEXP_7__[12]}]
+}
+transition on num_expr to state [38]
+transition on NUMBER to state [37]
+transition on __REGEXP_10__ to state [36]
+
+-------------------
+lalr_state [27]: {
+  [value ::= __REGEXP_9__$0_1 (*) num_expr , {EOLN[3], __REGEXP_2__[7], __REGEXP_7__[12]}]
+  [value ::= __REGEXP_9__$0_1 (*) __REGEXP_10__ , {EOLN[3], __REGEXP_2__[7], __REGEXP_7__[12]}]
+  [num_expr ::= (*) NUMBER , {EOLN[3], __REGEXP_2__[7], __REGEXP_7__[12]}]
+  [num_expr ::= (*) NUMBER EXPO , {EOLN[3], __REGEXP_2__[7], __REGEXP_7__[12]}]
+  [num_expr ::= (*) NUMBER __REGEXP_6__ NUMBER , {EOLN[3], __REGEXP_2__[7], __REGEXP_7__[12]}]
+  [num_expr ::= (*) NUMBER __REGEXP_6__ NUMBER EXPO , {EOLN[3], __REGEXP_2__[7], __REGEXP_7__[12]}]
+}
+transition on num_expr to state [41]
+transition on NUMBER to state [40]
+transition on __REGEXP_10__ to state [39]
+
+-------------------
+lalr_state [28]: {
+  [value ::= BOOL (*) , {EOLN[3], __REGEXP_2__[7], __REGEXP_7__[12]}]
+}
+
+-------------------
+lalr_state [29]: {
+  [value ::= TEXT (*) , {EOLN[3], __REGEXP_2__[7], __REGEXP_7__[12]}]
+}
+
+-------------------
+lalr_state [30]: {
+  [value ::= array (*) , {EOLN[3], __REGEXP_2__[7], __REGEXP_7__[12]}]
+}
+
+-------------------
+lalr_state [31]: {
+  [instr ::= key __REGEXP_5__ value (*) , {EOLN[3]}]
+}
+
+-------------------
+lalr_state [32]: {
+  [$parenthesis2 ::= __REGEXP_6__ key_expr (*) , {__REGEXP_2__[7], __REGEXP_4__[9], __REGEXP_5__[10], __REGEXP_6__[11]}]
+}
+
+-------------------
+lalr_state [33]: {
+  [block ::= __REGEXP_1__ key __REGEXP_2__ EOLN list (*) , {EOF[1], EOLN[3]}]
+}
+
+-------------------
+lalr_state [34]: {
+  [block ::= __REGEXP_3__ key __REGEXP_4__ EOLN list (*) , {EOF[1], EOLN[3]}]
+}
+
+-------------------
+lalr_state [35]: {
+  [array ::= __REGEXP_1__ value (*) $parenthesis1$0_many __REGEXP_2__ , {EOLN[3], __REGEXP_2__[7], __REGEXP_7__[12]}]
+  [$parenthesis1$0_many ::= (*) , {__REGEXP_2__[7], __REGEXP_7__[12]}]
+  [$parenthesis1$0_many ::= (*) $parenthesis1$0_many $parenthesis1 , {__REGEXP_2__[7], __REGEXP_7__[12]}]
+}
+transition on $parenthesis1$0_many to state [42]
+
+-------------------
+lalr_state [36]: {
+  [value ::= __REGEXP_8__ __REGEXP_10__ (*) , {EOLN[3], __REGEXP_2__[7], __REGEXP_7__[12]}]
+}
+
+-------------------
+lalr_state [37]: {
+  [num_expr ::= NUMBER (*) EXPO , {EOLN[3], __REGEXP_2__[7], __REGEXP_7__[12]}]
+  [num_expr ::= NUMBER (*) __REGEXP_6__ NUMBER , {EOLN[3], __REGEXP_2__[7], __REGEXP_7__[12]}]
+  [num_expr ::= NUMBER (*) __REGEXP_6__ NUMBER EXPO , {EOLN[3], __REGEXP_2__[7], __REGEXP_7__[12]}]
+  [value ::= __REGEXP_8__ num_expr (*) , {EOLN[3], __REGEXP_2__[7], __REGEXP_7__[12]}]
+}
+transition on EXPO to state [44]
+transition on __REGEXP_6__ to state [43]
+
+-------------------
+lalr_state [38]: {
+  [value ::= __REGEXP_8__ num_expr (*) , {EOLN[3], __REGEXP_2__[7], __REGEXP_7__[12]}]
+}
+
+-------------------
+lalr_state [39]: {
+  [value ::= __REGEXP_9__$0_1 __REGEXP_10__ (*) , {EOLN[3], __REGEXP_2__[7], __REGEXP_7__[12]}]
+}
+
+-------------------
+lalr_state [40]: {
+  [num_expr ::= NUMBER (*) EXPO , {EOLN[3], __REGEXP_2__[7], __REGEXP_7__[12]}]
+  [num_expr ::= NUMBER (*) __REGEXP_6__ NUMBER , {EOLN[3], __REGEXP_2__[7], __REGEXP_7__[12]}]
+  [num_expr ::= NUMBER (*) __REGEXP_6__ NUMBER EXPO , {EOLN[3], __REGEXP_2__[7], __REGEXP_7__[12]}]
+  [value ::= __REGEXP_9__$0_1 num_expr (*) , {EOLN[3], __REGEXP_2__[7], __REGEXP_7__[12]}]
+}
+transition on EXPO to state [44]
+transition on __REGEXP_6__ to state [43]
+
+-------------------
+lalr_state [41]: {
+  [value ::= __REGEXP_9__$0_1 num_expr (*) , {EOLN[3], __REGEXP_2__[7], __REGEXP_7__[12]}]
+}
+
+-------------------
+lalr_state [42]: {
+  [array ::= __REGEXP_1__ value $parenthesis1$0_many (*) __REGEXP_2__ , {EOLN[3], __REGEXP_2__[7], __REGEXP_7__[12]}]
+  [$parenthesis1$0_many ::= $parenthesis1$0_many (*) $parenthesis1 , {__REGEXP_2__[7], __REGEXP_7__[12]}]
+  [$parenthesis1 ::= (*) __REGEXP_7__ value , {__REGEXP_2__[7], __REGEXP_7__[12]}]
+}
+transition on $parenthesis1 to state [47]
+transition on __REGEXP_7__ to state [46]
+transition on __REGEXP_2__ to state [45]
+
+-------------------
+lalr_state [43]: {
+  [num_expr ::= NUMBER __REGEXP_6__ (*) NUMBER , {EOLN[3], __REGEXP_2__[7], __REGEXP_7__[12]}]
+  [num_expr ::= NUMBER __REGEXP_6__ (*) NUMBER EXPO , {EOLN[3], __REGEXP_2__[7], __REGEXP_7__[12]}]
+}
+transition on NUMBER to state [48]
+
+-------------------
+lalr_state [44]: {
+  [num_expr ::= NUMBER EXPO (*) , {EOLN[3], __REGEXP_2__[7], __REGEXP_7__[12]}]
+}
+
+-------------------
+lalr_state [45]: {
+  [array ::= __REGEXP_1__ value $parenthesis1$0_many __REGEXP_2__ (*) , {EOLN[3], __REGEXP_2__[7], __REGEXP_7__[12]}]
+}
+
+-------------------
+lalr_state [46]: {
+  [$parenthesis1 ::= __REGEXP_7__ (*) value , {__REGEXP_2__[7], __REGEXP_7__[12]}]
+  [array ::= (*) __REGEXP_1__ value $parenthesis1$0_many __REGEXP_2__ , {__REGEXP_2__[7], __REGEXP_7__[12]}]
+  [value ::= (*) TEXT , {__REGEXP_2__[7], __REGEXP_7__[12]}]
+  [value ::= (*) __REGEXP_8__ num_expr , {__REGEXP_2__[7], __REGEXP_7__[12]}]
+  [value ::= (*) __REGEXP_9__$0_1 num_expr , {__REGEXP_2__[7], __REGEXP_7__[12]}]
+  [value ::= (*) BOOL , {__REGEXP_2__[7], __REGEXP_7__[12]}]
+  [value ::= (*) __REGEXP_9__$0_1 __REGEXP_10__ , {__REGEXP_2__[7], __REGEXP_7__[12]}]
+  [value ::= (*) __REGEXP_8__ __REGEXP_10__ , {__REGEXP_2__[7], __REGEXP_7__[12]}]
+  [value ::= (*) array , {__REGEXP_2__[7], __REGEXP_7__[12]}]
+  [__REGEXP_9__$0_1 ::= (*) , {__REGEXP_10__[5], NUMBER<Double>[15]}]
+  [__REGEXP_9__$0_1 ::= (*) __REGEXP_9__ , {__REGEXP_10__[5], NUMBER<Double>[15]}]
+}
+transition on __REGEXP_9__$0_1 to state [27]
+transition on value to state [49]
+transition on array to state [30]
+transition on TEXT to state [29]
+transition on BOOL to state [28]
+transition on __REGEXP_9__ to state [27]
+transition on __REGEXP_8__ to state [26]
+transition on __REGEXP_1__ to state [25]
+
+-------------------
+lalr_state [47]: {
+  [$parenthesis1$0_many ::= $parenthesis1$0_many $parenthesis1 (*) , {__REGEXP_2__[7], __REGEXP_7__[12]}]
+}
+
+-------------------
+lalr_state [48]: {
+  [num_expr ::= NUMBER __REGEXP_6__ NUMBER (*) , {EOLN[3], __REGEXP_2__[7], __REGEXP_7__[12]}]
+  [num_expr ::= NUMBER __REGEXP_6__ NUMBER (*) EXPO , {EOLN[3], __REGEXP_2__[7], __REGEXP_7__[12]}]
+}
+transition on EXPO to state [50]
+
+-------------------
+lalr_state [49]: {
+  [$parenthesis1 ::= __REGEXP_7__ value (*) , {__REGEXP_2__[7], __REGEXP_7__[12]}]
+}
+
+-------------------
+lalr_state [50]: {
+  [num_expr ::= NUMBER __REGEXP_6__ NUMBER EXPO (*) , {EOLN[3], __REGEXP_2__[7], __REGEXP_7__[12]}]
+}
+
+-------------------
+-------- ACTION_TABLE --------
+From state #0
+ [default:ERROR]
+ [term 1:REDUCE(28)] [term 3:REDUCE(28)]
+ [term 6:SHIFT(1)] [term 8:SHIFT(2)]
+ [term 15:REDUCE(28)] [term 18:REDUCE(28)]
+ [term 19:REDUCE(28)]
+From state #1
+ [default:ERROR]
+ [term 15:SHIFT(7)] [term 18:SHIFT(7)]
+ [term 19:SHIFT(7)]
+From state #2
+ [default:ERROR]
+ [term 15:SHIFT(7)] [term 18:SHIFT(7)]
+ [term 19:SHIFT(7)]
+From state #3
+ [default:ERROR]
+ [term 1:REDUCE(15)] [term 3:SHIFT(10)]
+From state #4
+ [default:ERROR]
+ [term 1:SHIFT(11)]
+From state #5
+ [default:ERROR]
+ [term 1:REDUCE(5)] [term 3:REDUCE(5)]
+From state #6
+ [default:ERROR]
+ [term 1:REDUCE(10)] [term 3:REDUCE(10)]
+ [term 15:SHIFT(7)] [term 18:SHIFT(7)]
+ [term 19:SHIFT(7)]
+From state #7
+ [default:ERROR]
+ [term 7:REDUCE(26)] [term 9:REDUCE(26)]
+ [term 10:REDUCE(26)] [term 11:REDUCE(26)]
+From state #8
+ [default:ERROR]
+ [term 7:SHIFT(16)]
+From state #9
+ [default:ERROR]
+ [term 9:SHIFT(17)]
+From state #10
+ [default:ERROR]
+ [term 1:REDUCE(28)] [term 3:REDUCE(28)]
+ [term 6:SHIFT(1)] [term 8:SHIFT(2)]
+ [term 15:REDUCE(28)] [term 18:REDUCE(28)]
+ [term 19:REDUCE(28)]
+From state #11
+ [default:ERROR]
+ [term 1:REDUCE(0)]
+From state #12
+ [default:ERROR]
+ [term 10:SHIFT(19)]
+From state #13
+ [default:ERROR]
+ [term 3:SHIFT(20)]
+From state #14
+ [default:ERROR]
+ [term 1:REDUCE(29)] [term 3:REDUCE(29)]
+ [term 15:REDUCE(29)] [term 18:REDUCE(29)]
+ [term 19:REDUCE(29)]
+From state #15
+ [default:ERROR]
+ [term 7:REDUCE(8)] [term 9:REDUCE(8)]
+ [term 10:REDUCE(8)] [term 11:SHIFT(21)]
+From state #16
+ [default:ERROR]
+ [term 3:SHIFT(23)]
+From state #17
+ [default:ERROR]
+ [term 3:SHIFT(24)]
+From state #18
+ [default:ERROR]
+ [term 1:REDUCE(14)]
+From state #19
+ [default:ERROR]
+ [term 5:REDUCE(23)] [term 6:SHIFT(25)]
+ [term 13:SHIFT(26)] [term 14:SHIFT(27)]
+ [term 15:REDUCE(23)] [term 16:SHIFT(28)]
+ [term 19:SHIFT(29)]
+From state #20
+ [default:ERROR]
+ [term 1:REDUCE(9)] [term 3:REDUCE(9)]
+ [term 15:REDUCE(9)] [term 18:REDUCE(9)]
+ [term 19:REDUCE(9)]
+From state #21
+ [default:ERROR]
+ [term 15:SHIFT(32)] [term 18:SHIFT(32)]
+ [term 19:SHIFT(32)]
+From state #22
+ [default:ERROR]
+ [term 7:REDUCE(27)] [term 9:REDUCE(27)]
+ [term 10:REDUCE(27)] [term 11:REDUCE(27)]
+From state #23
+ [default:ERROR]
+ [term 1:REDUCE(28)] [term 3:REDUCE(28)]
+ [term 15:REDUCE(28)] [term 18:REDUCE(28)]
+ [term 19:REDUCE(28)]
+From state #24
+ [default:ERROR]
+ [term 1:REDUCE(28)] [term 3:REDUCE(28)]
+ [term 15:REDUCE(28)] [term 18:REDUCE(28)]
+ [term 19:REDUCE(28)]
+From state #25
+ [default:ERROR]
+ [term 5:REDUCE(23)] [term 6:SHIFT(25)]
+ [term 13:SHIFT(26)] [term 14:SHIFT(27)]
+ [term 15:REDUCE(23)] [term 16:SHIFT(28)]
+ [term 19:SHIFT(29)]
+From state #26
+ [default:ERROR]
+ [term 5:SHIFT(36)] [term 15:SHIFT(37)]
+From state #27
+ [default:ERROR]
+ [term 5:SHIFT(39)] [term 15:SHIFT(40)]
+From state #28
+ [default:ERROR]
+ [term 3:REDUCE(19)] [term 7:REDUCE(19)]
+ [term 12:REDUCE(19)]
+From state #29
+ [default:ERROR]
+ [term 3:REDUCE(16)] [term 7:REDUCE(16)]
+ [term 12:REDUCE(16)]
+From state #30
+ [default:ERROR]
+ [term 3:REDUCE(22)] [term 7:REDUCE(22)]
+ [term 12:REDUCE(22)]
+From state #31
+ [default:ERROR]
+ [term 3:REDUCE(6)]
+From state #32
+ [default:ERROR]
+ [term 7:REDUCE(7)] [term 9:REDUCE(7)]
+ [term 10:REDUCE(7)] [term 11:REDUCE(7)]
+From state #33
+ [default:ERROR]
+ [term 1:REDUCE(3)] [term 3:REDUCE(3)]
+From state #34
+ [default:ERROR]
+ [term 1:REDUCE(4)] [term 3:REDUCE(4)]
+From state #35
+ [default:ERROR]
+ [term 7:REDUCE(24)] [term 12:REDUCE(24)]
+From state #36
+ [default:ERROR]
+ [term 3:REDUCE(21)] [term 7:REDUCE(21)]
+ [term 12:REDUCE(21)]
+From state #37
+ [default:ERROR]
+ [term 3:REDUCE(17)] [term 7:REDUCE(17)]
+ [term 11:SHIFT(43)] [term 12:REDUCE(17)]
+ [term 17:SHIFT(44)]
+From state #38
+ [default:ERROR]
+ [term 3:REDUCE(17)] [term 7:REDUCE(17)]
+ [term 12:REDUCE(17)]
+From state #39
+ [default:ERROR]
+ [term 3:REDUCE(20)] [term 7:REDUCE(20)]
+ [term 12:REDUCE(20)]
+From state #40
+ [default:ERROR]
+ [term 3:REDUCE(18)] [term 7:REDUCE(18)]
+ [term 11:SHIFT(43)] [term 12:REDUCE(18)]
+ [term 17:SHIFT(44)]
+From state #41
+ [default:ERROR]
+ [term 3:REDUCE(18)] [term 7:REDUCE(18)]
+ [term 12:REDUCE(18)]
+From state #42
+ [default:ERROR]
+ [term 7:SHIFT(45)] [term 12:SHIFT(46)]
+From state #43
+ [default:ERROR]
+ [term 15:SHIFT(48)]
+From state #44
+ [default:ERROR]
+ [term 3:REDUCE(11)] [term 7:REDUCE(11)]
+ [term 12:REDUCE(11)]
+From state #45
+ [default:ERROR]
+ [term 3:REDUCE(2)] [term 7:REDUCE(2)]
+ [term 12:REDUCE(2)]
+From state #46
+ [default:ERROR]
+ [term 5:REDUCE(23)] [term 6:SHIFT(25)]
+ [term 13:SHIFT(26)] [term 14:SHIFT(27)]
+ [term 15:REDUCE(23)] [term 16:SHIFT(28)]
+ [term 19:SHIFT(29)]
+From state #47
+ [default:ERROR]
+ [term 7:REDUCE(25)] [term 12:REDUCE(25)]
+From state #48
+ [default:ERROR]
+ [term 3:REDUCE(12)] [term 7:REDUCE(12)]
+ [term 12:REDUCE(12)] [term 17:SHIFT(50)]
+From state #49
+ [default:ERROR]
+ [term 7:REDUCE(1)] [term 12:REDUCE(1)]
+From state #50
+ [default:ERROR]
+ [term 3:REDUCE(13)] [term 7:REDUCE(13)]
+ [term 12:REDUCE(13)]
+------------------------------
+-------- REDUCE_TABLE --------
+From state #0
+ [non term 0->state 3] [non term 1->state 4] [non term 3->state 5]
+ [non term 15->state 6]
+From state #1
+ [non term 5->state 8] [non term 7->state 7]
+From state #2
+ [non term 5->state 9] [non term 7->state 7]
+From state #3
+From state #4
+From state #5
+From state #6
+ [non term 5->state 12] [non term 6->state 13] [non term 7->state 7]
+ [non term 14->state 14]
+From state #7
+ [non term 13->state 15]
+From state #8
+From state #9
+From state #10
+ [non term 0->state 3] [non term 1->state 18] [non term 3->state 5]
+ [non term 15->state 6]
+From state #11
+From state #12
+From state #13
+From state #14
+From state #15
+ [non term 12->state 22]
+From state #16
+From state #17
+From state #18
+From state #19
+ [non term 4->state 30] [non term 8->state 31] [non term 16->state 27]
+From state #20
+From state #21
+ [non term 7->state 32]
+From state #22
+From state #23
+ [non term 3->state 33] [non term 15->state 6]
+From state #24
+ [non term 3->state 34] [non term 15->state 6]
+From state #25
+ [non term 4->state 30] [non term 8->state 35] [non term 16->state 27]
+From state #26
+ [non term 2->state 38]
+From state #27
+ [non term 2->state 41]
+From state #28
+From state #29
+From state #30
+From state #31
+From state #32
+From state #33
+From state #34
+From state #35
+ [non term 11->state 42]
+From state #36
+From state #37
+From state #38
+From state #39
+From state #40
+From state #41
+From state #42
+ [non term 10->state 47]
+From state #43
+From state #44
+From state #45
+From state #46
+ [non term 4->state 30] [non term 8->state 49] [non term 16->state 27]
+From state #47
+From state #48
+From state #49
+From state #50
+-----------------------------
