@@ -1,6 +1,6 @@
-## TOML to JSON translator
+# TOML to JSON translator
 
-# Features : 
+## Features : 
 
  Key syntax:
  	- simple keys ( bare_key = "value" )
